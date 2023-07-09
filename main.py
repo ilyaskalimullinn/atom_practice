@@ -1,3 +1,4 @@
-from db.db import create_all_tables
+from apps import app
 
-create_all_tables()
+if __name__ == '__main__':
+    app()

@@ -9,3 +9,7 @@ class CarManufacturer(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
+
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
