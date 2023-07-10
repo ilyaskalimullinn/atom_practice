@@ -26,13 +26,19 @@ class IModelCrudRepository(Generic[T], abc.ABC):
     def delete(self, obj: T) -> T:
         pass
 
+    @abc.abstractmethod
+    def refresh(self, obj: T) -> T:
+        pass
+
 
 class ICarManufacturerRepository(IModelCrudRepository[CarManufacturer], abc.ABC):
     pass
 
 
 class ICarModelRepository(IModelCrudRepository[CarModel], abc.ABC):
-    pass
+    @abc.abstractmethod
+    def find_by_name(self, model_name: str, manufacturer_name: str) -> Optional[CarModel]:
+        pass
 
 
 class ICarUsageRepository(IModelCrudRepository[CarUsage], abc.ABC):
@@ -68,6 +74,9 @@ class ModelCrudMixin(Generic[T]):
         self.session.delete(obj)
         self.session.commit()
 
+    def refresh(self, obj: T) -> None:
+        self.session.refresh(obj)
+
 
 class CarManufacturerRepository(ModelCrudMixin[CarManufacturer], ICarManufacturerRepository):
     def __init__(self, session: Session) -> None:
@@ -83,6 +92,15 @@ class CarModelRepository(ModelCrudMixin[CarModel], ICarModelRepository):
 
     def find_by_id(self, id: int) -> Optional[CarModel]:
         return self.session.get(CarModel, id)
+
+    def find_by_name(self, model_name: str, manufacturer_name: str) -> Optional[CarModel]:
+        return self.session.query(CarModel)\
+            .join(CarModel.manufacturer)\
+            .filter(
+                CarModel.name == model_name,
+                CarManufacturer.name == manufacturer_name
+            )\
+            .first()
 
 
 class CarUsageRepository(ModelCrudMixin[CarUsage], ICarUsageRepository):

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from db.models import CarModel
 from db.repositories import ICarModelRepository
@@ -14,6 +14,9 @@ class CarModelService:
 
     def find_all(self) -> List[CarModel]:
         return self.car_model_repository.find_all()
+
+    def find_by_name(self, model_name: str, manufacturer_name: str) -> Optional[CarModel]:
+        return self.car_model_repository.find_by_name(model_name=model_name, manufacturer_name=manufacturer_name)
 
     def create(self, serializer: CarModelSerializer) -> CarModel:
         if not serializer.is_valid():

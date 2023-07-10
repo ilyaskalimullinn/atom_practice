@@ -47,4 +47,4 @@ class BaseCrudService(Generic[T], abc.ABC):
             raise ServiceException(f"Invalid {self.model_class} id")
         obj = serializer.to_obj()
         self.model_repository.save(obj)
-        return obj
+        return self.model_repository.find_by_id(obj.id)

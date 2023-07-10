@@ -74,17 +74,13 @@ class Car(Base):
                  manufacture_date: date,
                  mileage: int,
                  model_id: Optional[int] = None,
-                 usage_id: Optional[int] = None,
-                 model: Optional[CarModel] = None,
-                 usage: Optional[CarUsage] = None) -> None:
+                 usage_id: Optional[int] = None) -> None:
         self.id = id
         self.plate_number= plate_number
         self.manufacture_date = manufacture_date
         self.mileage = mileage
         self.model_id = model_id
         self.usage_id = usage_id
-        self.model = model
-        self.usage = usage
 
     def __repr__(self):
         return f"<Car(id={self.id}, plate={self.plate_number})>"
