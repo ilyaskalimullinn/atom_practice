@@ -28,7 +28,7 @@ def delete(id: int):
     """Delete car manufacturer by id"""
     is_confirmed = Confirm.ask(f"Are you sure you want to delete manufacturers with id {id}?")
     if is_confirmed:
-        manufacturer = car_manufacturer_service.delete(id)
+        manufacturer = car_manufacturer_service.delete_by_id(id)
         car_manufacturer_view.deleted(manufacturer)
 
 
