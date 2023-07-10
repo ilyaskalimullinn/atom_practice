@@ -53,3 +53,17 @@ class CarUsage(Base):
 
     def __repr__(self):
         return f"<CarUsage(id={self.id}, name={self.name})>"
+
+
+class Car(Base):
+    __tablename__ = "car"
+
+    id = Column(Integer, primary_key=True)
+    plate_number = Column(String(32))
+    manufacture_date = Column(Date)
+    mileage = Column(Integer)
+    model_id = Column(ForeignKey("car_model.id", ondelete="CASCADE"))
+    usage_id = Column(ForeignKey("car_usage.id", ondelete="SET NULL"))
+
+    model = relationship("CarModel")
+    usage = relationship("CarUsage")

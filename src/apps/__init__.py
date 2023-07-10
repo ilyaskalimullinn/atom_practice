@@ -1,5 +1,6 @@
 import typer
 
+from apps.car_app import car_app
 from apps.car_manufacturer_app import car_manufacturer_app
 from apps.car_model_app import car_model_app
 from apps.car_usage_app import car_usage_app
@@ -9,6 +10,7 @@ app = typer.Typer()
 app.add_typer(car_manufacturer_app, name='manufacturer')
 app.add_typer(car_model_app, name='model')
 app.add_typer(car_usage_app, name='usage')
+app.add_typer(car_app, name="car")
 
 
 @app.command("init_db")
