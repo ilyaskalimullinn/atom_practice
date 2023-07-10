@@ -13,7 +13,7 @@ car_manufacturer_app = typer.Typer()
 def find_all():
     """Get a list of all car manufacturers"""
     lst = car_manufacturer_service.find_all()
-    car_manufacturer_view.print(lst)
+    car_manufacturer_view.print_table(*lst)
 
 
 @car_manufacturer_app.command("create")

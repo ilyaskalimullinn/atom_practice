@@ -29,7 +29,7 @@ class CarModel(Base):
     release_date = Column(Date)
     manufacturer_id = Column(ForeignKey("car_manufacturer.id"))
 
-    manufacturer = relationship("CarManufacturer")
+    manufacturer = relationship("CarManufacturer", cascade="all, delete")
 
     def __init__(self, id: int, name: str, release_date: date, manufacturer_id: int):
         self.id = id

@@ -4,33 +4,10 @@ from rich.console import Console
 from rich.table import Table
 
 from db.models import CarManufacturer
+from views import GenericModelView
 
 
-class CarManufacturerView:
-    console: Console
-
+class CarManufacturerView(GenericModelView[CarManufacturer]):
     def __init__(self, console: Console) -> None:
-        self.console = console
+        super().__init__(console, table_columns=["id", "name"], table_column_labels=["Id", "Name"])
 
-    def print(self, manufacturers: Union[List[CarManufacturer], CarManufacturer]) -> None:
-        if type(manufacturers) == CarManufacturer:
-            manufacturers = [manufacturers]
-        table = Table("id", "name")
-        for m in manufacturers:
-            table.add_row(str(m.id), m.name)
-        self.console.print(table)
-
-    def print_message(self, message: str) -> None:
-        self.console.print(message)
-
-    def deleted(self, manufacturers: Union[CarManufacturer, List[CarManufacturer]]) -> None:
-        self.print_message("Successfully deleted manufacturers")
-        self.print(manufacturers)
-
-    def created(self, manufacturers: Union[CarManufacturer, List[CarManufacturer]]) -> None:
-        self.print_message("Successfully created manufacturers")
-        self.print(manufacturers)
-
-    def updated(self, manufacturers: Union[CarManufacturer, List[CarManufacturer]]) -> None:
-        self.print_message("Successfully updated manufacturers")
-        self.print(manufacturers)

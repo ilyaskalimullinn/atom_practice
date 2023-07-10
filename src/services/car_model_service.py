@@ -28,3 +28,12 @@ class CarModelService:
             raise ServiceException(f"No car model with id {id}")
         self.car_model_repository.delete(car_model)
         return car_model
+
+    def update(self, serializer: CarModelSerializer) -> CarModel:
+        if not serializer.is_valid():
+            raise ServiceException("Validation exception")
+        if serializer.id is None:
+            raise ServiceException("Invalid car model id")
+        model = serializer.to_obj()
+        self.car_model_repository.save(model)
+        return model
