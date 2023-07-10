@@ -39,3 +39,17 @@ class CarModel(Base):
 
     def __repr__(self):
         return f"<CarModel(id={self.id}, name={self.name}, release_date={self.release_date} manufacturer_id={self.manufacturer_id})>"
+
+
+class CarUsage(Base):
+    __tablename__ = "car_usage"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255))
+
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
+    def __repr__(self):
+        return f"<CarUsage(id={self.id}, name={self.name})>"

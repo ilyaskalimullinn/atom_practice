@@ -36,4 +36,4 @@ class CarModelService:
             raise ServiceException("Invalid car model id")
         model = serializer.to_obj()
         self.car_model_repository.save(model)
-        return model
+        return self.car_model_repository.find_by_id(model.id)
