@@ -28,8 +28,8 @@ def delete(id: int):
     """Delete car usage by id"""
     is_confirmed = Confirm.ask(f"Are you sure you want to delete car usage with id {id}?")
     if is_confirmed:
-        manufacturer = car_usage_service.delete(id)
-        car_usage_view.deleted(manufacturer)
+        usage = car_usage_service.delete_by_id(id)
+        car_usage_view.deleted(usage)
 
 
 @car_usage_app.command("update")
