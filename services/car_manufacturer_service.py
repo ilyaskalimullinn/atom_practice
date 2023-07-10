@@ -23,7 +23,9 @@ class CarManufacturerService:
         return manufacturer
 
     def delete(self, id: int) -> CarManufacturer:
-        try:
-            return self.car_manufacturer_repository.delete_by_id(id)
-        except DbNotFoundException:
+        car_manufacturer = self.car_manufacturer_repository.find_by_id(id)
+        if car_manufacturer is None:
             raise ServiceException(f"No car manufacturer with id {id}")
+        self.car_manufacturer_repository.delete(car_manufacturer)
+        return car_manufacturer
+

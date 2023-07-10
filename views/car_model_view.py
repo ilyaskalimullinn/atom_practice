@@ -12,10 +12,13 @@ class CarModelView:
     def __init__(self, console: Console) -> None:
         self.console = console
 
-    def print(self, models: Union[List[CarModel], CarModel]):
+    def print(self, models: Union[List[CarModel], CarModel]) -> None:
         if type(models) == CarModel:
             models = [models]
         table = Table("id", "name", "release_date", "manufacturer")
         for m in models:
             table.add_row(str(m.id), m.name, str(m.release_date), m.manufacturer.name)
         self.console.print(table)
+
+    def delete(self, model: CarModel):
+        self.console.print(f"Successfully deleted car model {model.name}, id {model.id}")

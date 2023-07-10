@@ -1,5 +1,5 @@
 import abc
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy.orm import joinedload
 
@@ -14,11 +14,15 @@ class ICarManufacturerRepository(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def find_by_id(self, id: int) -> Optional[CarManufacturer]:
+        pass
+
+    @abc.abstractmethod
     def save(self, manufacturer: CarManufacturer) -> None:
         pass
 
     @abc.abstractmethod
-    def delete_by_id(self, id: int) -> CarManufacturer:
+    def delete(self, car_manufacturer: CarManufacturer) -> CarManufacturer:
         pass
 
 
@@ -28,7 +32,15 @@ class ICarModelRepository(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def find_by_id(self, id: int) -> Optional[CarModel]:
+        pass
+
+    @abc.abstractmethod
     def save(self, model: CarModel) -> None:
+        pass
+
+    @abc.abstractmethod
+    def delete(self, model: CarModel) -> None:
         pass
 
 
@@ -46,13 +58,12 @@ class CarManufacturerRepository(ICarManufacturerRepository):
         self.session.add(manufacturer)
         self.session.commit()
 
-    def delete_by_id(self, id: int) -> CarManufacturer:
-        manufacturer = self.session.query(CarManufacturer).get(id)
-        if manufacturer is None:
-            raise DbNotFoundException(f"Car manufacturer with id {id} not found")
-        self.session.delete(manufacturer)
+    def find_by_id(self, id: int) -> Optional[CarManufacturer]:
+        return self.session.get(CarManufacturer, id)
+
+    def delete(self, car_manufacturer: CarManufacturer) -> None:
+        self.session.delete(car_manufacturer)
         self.session.commit()
-        return manufacturer
 
 
 class CarModelRepository(ICarModelRepository):
@@ -67,3 +78,12 @@ class CarModelRepository(ICarModelRepository):
     def save(self, car_model: CarModel) -> None:
         self.session.add(car_model)
         self.session.commit()
+
+    def find_by_id(self, id: int) -> Optional[CarModel]:
+        return self.session.get(CarModel, id)
+
+    def delete(self, model: CarModel) -> None:
+        self.session.delete(model)
+        self.session.commit()
+
+

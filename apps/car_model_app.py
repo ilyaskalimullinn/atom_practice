@@ -2,7 +2,7 @@ import datetime
 from datetime import date
 
 import typer
-from rich.prompt import Prompt
+from rich.prompt import Prompt, Confirm
 
 from base import car_model_service, car_model_view, car_manufacturer_service
 from serializers import CarModelSerializer
@@ -29,3 +29,12 @@ def create_prompt():
 
     car_model = car_model_service.create(serializer)
     car_model_view.print(car_model)
+
+
+@car_model_app.command("delete")
+def delete(id: int):
+    """Delete car model by id"""
+    is_confirmed = Confirm.ask(f"Are you sure you want to delete car model with id {id}?")
+    if is_confirmed:
+        model = car_model_service.delete(id)
+        car_model_view.delete(model)
