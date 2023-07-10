@@ -1,14 +1,14 @@
 from typing import List
 
 from db.models import CarManufacturer
-from db.repositories import CarManufacturerRepository
+from db.repositories import ICarManufacturerRepository
 from serializers import CarManufacturerSerializer
 
 
 class CarManufacturerService:
-    car_manufacturer_repository: CarManufacturerRepository
+    car_manufacturer_repository: ICarManufacturerRepository
 
-    def __init__(self, car_manufacturer_repository: CarManufacturerRepository) -> None:
+    def __init__(self, car_manufacturer_repository: ICarManufacturerRepository) -> None:
         self.car_manufacturer_repository = car_manufacturer_repository
 
     def find_all(self) -> List[CarManufacturer]:
@@ -18,5 +18,5 @@ class CarManufacturerService:
         if not serializer.is_valid():
             raise ValueError("Validation exception")
         manufacturer = serializer.to_obj()
-        self.car_manufacturer_repository.create(manufacturer)
+        self.car_manufacturer_repository.save(manufacturer)
         return manufacturer
