@@ -4,8 +4,7 @@ from typing import List, Optional, TypeVar, Generic, Type
 from sqlalchemy.orm import joinedload
 
 from db.db import Session
-from db.models import CarManufacturer, CarModel
-
+from db.models import CarManufacturer, CarModel, CarUsage
 
 T = TypeVar("T")
 
@@ -33,6 +32,10 @@ class ICarManufacturerRepository(IModelCrudRepository[CarManufacturer], abc.ABC)
 
 
 class ICarModelRepository(IModelCrudRepository[CarModel], abc.ABC):
+    pass
+
+
+class ICarUsageRepository(IModelCrudRepository[CarUsage], abc.ABC):
     pass
 
 
@@ -76,3 +79,8 @@ class CarModelRepository(ModelCrudMixin[CarModel], ICarModelRepository):
 
     def find_by_id(self, id: int) -> Optional[CarModel]:
         return self.session.get(CarModel, id)
+
+
+class CarUsageRepository(ModelCrudMixin[CarUsage], ICarUsageRepository):
+    def __init__(self, session: Session) -> None:
+        super().__init__(session, CarUsage)

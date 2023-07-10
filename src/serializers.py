@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional
 
-from db.models import CarManufacturer, CarModel
+from db.models import CarManufacturer, CarModel, CarUsage
 
 
 class CarManufacturerSerializer:
@@ -46,3 +46,20 @@ class CarModelSerializer:
 
     def to_obj(self) -> CarModel:
         return CarModel(self.id, self.name, self.release_date, self.manufacturer_id)
+
+
+class CarUsageSerializer:
+    id: int
+    name: str
+
+    def __init__(self, id: Optional[int] = None, name: Optional[str] = None) -> None:
+        self.id = id
+        self.name = name
+
+    def is_valid(self) -> bool:
+        return self.name is not None \
+            and len(self.name) > 0 \
+            and (self.id is None or self.id > 0)
+
+    def to_obj(self) -> CarUsage:
+        return CarUsage(self.id, self.name)
