@@ -27,9 +27,9 @@ class CarModel(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
     release_date = Column(Date)
-    manufacturer_id = Column(ForeignKey("car_manufacturer.id"))
+    manufacturer_id = Column(ForeignKey("car_manufacturer.id", ondelete="CASCADE"))
 
-    manufacturer = relationship("CarManufacturer", cascade="all, delete")
+    manufacturer = relationship("CarManufacturer")
 
     def __init__(self, id: int, name: str, release_date: date, manufacturer_id: int):
         self.id = id
