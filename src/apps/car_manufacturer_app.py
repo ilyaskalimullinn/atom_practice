@@ -1,3 +1,5 @@
+from typing import List
+
 import typer
 from rich.prompt import Prompt, Confirm
 
@@ -20,13 +22,23 @@ def create_prompt():
     serializer = CarManufacturerSerializer()
     serializer.name = Prompt.ask("Manufacturer name")
     manufacturer = car_manufacturer_service.create(serializer)
-    car_manufacturer_view.print(manufacturer)
+    car_manufacturer_view.created(manufacturer)
 
 
 @car_manufacturer_app.command("delete")
 def delete(id: int):
     """Delete car manufacturer by id"""
-    is_confirmed = Confirm.ask(f"Are you sure you want to delete manufacturer with id {id}?")
+    is_confirmed = Confirm.ask(f"Are you sure you want to delete manufacturers with id {id}?")
     if is_confirmed:
         manufacturer = car_manufacturer_service.delete(id)
-        car_manufacturer_view.delete(manufacturer)
+        car_manufacturer_view.deleted(manufacturer)
+
+
+@car_manufacturer_app.command("update")
+def update_prompt(id: int):
+    """Update manufacturer info using prompt"""
+    serializer = CarManufacturerSerializer()
+    serializer.id = id
+    serializer.name = Prompt.ask("New name")
+    manufacturer = car_manufacturer_service.update(serializer)
+    car_manufacturer_view.updated(manufacturer)

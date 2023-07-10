@@ -20,5 +20,17 @@ class CarManufacturerView:
             table.add_row(str(m.id), m.name)
         self.console.print(table)
 
-    def delete(self, manufacturer: CarManufacturer) -> None:
-        self.console.print(f"Successfully deleted manufacturer {manufacturer.name}, id {manufacturer.id}")
+    def print_message(self, message: str) -> None:
+        self.console.print(message)
+
+    def deleted(self, manufacturers: Union[CarManufacturer, List[CarManufacturer]]) -> None:
+        self.print_message("Successfully deleted manufacturers")
+        self.print(manufacturers)
+
+    def created(self, manufacturers: Union[CarManufacturer, List[CarManufacturer]]) -> None:
+        self.print_message("Successfully created manufacturers")
+        self.print(manufacturers)
+
+    def updated(self, manufacturers: Union[CarManufacturer, List[CarManufacturer]]) -> None:
+        self.print_message("Successfully updated manufacturers")
+        self.print(manufacturers)

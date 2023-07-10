@@ -37,4 +37,5 @@ def delete(id: int):
     is_confirmed = Confirm.ask(f"Are you sure you want to delete car model with id {id}?")
     if is_confirmed:
         model = car_model_service.delete(id)
-        car_model_view.delete(model)
+        car_model_view.deleted(model)
+

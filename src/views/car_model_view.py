@@ -20,5 +20,5 @@ class CarModelView:
             table.add_row(str(m.id), m.name, str(m.release_date), m.manufacturer.name)
         self.console.print(table)
 
-    def delete(self, model: CarModel):
+    def deleted(self, model: CarModel):
         self.console.print(f"Successfully deleted car model {model.name}, id {model.id}")

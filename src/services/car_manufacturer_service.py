@@ -29,3 +29,11 @@ class CarManufacturerService:
         self.car_manufacturer_repository.delete(car_manufacturer)
         return car_manufacturer
 
+    def update(self, serializer: CarManufacturerSerializer) -> CarManufacturer:
+        if not serializer.is_valid():
+            raise ServiceException("Validation exception")
+        if serializer.id is None:
+            raise ServiceException("Invalid car manufacturer id")
+        manufacturer = serializer.to_obj()
+        self.car_manufacturer_repository.save(manufacturer)
+        return manufacturer

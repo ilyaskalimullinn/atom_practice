@@ -55,7 +55,10 @@ class CarManufacturerRepository(ICarManufacturerRepository):
         return self.session.query(CarManufacturer).all()
 
     def save(self, manufacturer: CarManufacturer) -> None:
-        self.session.add(manufacturer)
+        if manufacturer.id is None:
+            self.session.add(manufacturer)
+        else:
+            self.session.merge(manufacturer)
         self.session.commit()
 
     def find_by_id(self, id: int) -> Optional[CarManufacturer]:
@@ -76,7 +79,10 @@ class CarModelRepository(ICarModelRepository):
         return self.session.query(CarModel).options(joinedload(CarModel.manufacturer)).all()
 
     def save(self, car_model: CarModel) -> None:
-        self.session.add(car_model)
+        if car_model.id is None:
+            self.session.add(car_model)
+        else:
+            self.session.merge(car_model)
         self.session.commit()
 
     def find_by_id(self, id: int) -> Optional[CarModel]:
