@@ -6,9 +6,12 @@ from services.car_manufacturer_service import CarManufacturerService
 from services.car_model_service import CarModelService
 from views.car_manufacturer_view import CarManufacturerView
 from views.car_model_view import CarModelView
+from views.error_view import ErrorView
 
 session = Session()
 console = Console()
+
+error_view = ErrorView(console)
 
 car_manufacturer_repository = CarManufacturerRepository(session)
 car_manufacturer_service = CarManufacturerService(car_manufacturer_repository)

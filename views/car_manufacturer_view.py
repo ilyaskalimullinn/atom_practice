@@ -12,10 +12,13 @@ class CarManufacturerView:
     def __init__(self, console: Console) -> None:
         self.console = console
 
-    def print(self, manufacturers: Union[List[CarManufacturer], CarManufacturer]):
+    def print(self, manufacturers: Union[List[CarManufacturer], CarManufacturer]) -> None:
         if type(manufacturers) == CarManufacturer:
             manufacturers = [manufacturers]
         table = Table("id", "name")
         for m in manufacturers:
             table.add_row(str(m.id), m.name)
         self.console.print(table)
+
+    def delete(self, manufacturer: CarManufacturer) -> None:
+        self.console.print(f"Successfully deleted manufacturer {manufacturer.name}, id {manufacturer.id}")

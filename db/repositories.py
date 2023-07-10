@@ -5,6 +5,7 @@ from sqlalchemy.orm import joinedload
 
 from db.db import Session
 from db.models import CarManufacturer, CarModel
+from exceptions import DbNotFoundException
 
 
 class ICarManufacturerRepository(abc.ABC):
@@ -14,6 +15,10 @@ class ICarManufacturerRepository(abc.ABC):
 
     @abc.abstractmethod
     def save(self, manufacturer: CarManufacturer) -> None:
+        pass
+
+    @abc.abstractmethod
+    def delete_by_id(self, id: int) -> CarManufacturer:
         pass
 
 
@@ -28,6 +33,7 @@ class ICarModelRepository(abc.ABC):
 
 
 class CarManufacturerRepository(ICarManufacturerRepository):
+
     session: Session
 
     def __init__(self, session: Session) -> None:
@@ -39,6 +45,14 @@ class CarManufacturerRepository(ICarManufacturerRepository):
     def save(self, manufacturer: CarManufacturer) -> None:
         self.session.add(manufacturer)
         self.session.commit()
+
+    def delete_by_id(self, id: int) -> CarManufacturer:
+        manufacturer = self.session.query(CarManufacturer).get(id)
+        if manufacturer is None:
+            raise DbNotFoundException(f"Car manufacturer with id {id} not found")
+        self.session.delete(manufacturer)
+        self.session.commit()
+        return manufacturer
 
 
 class CarModelRepository(ICarModelRepository):
