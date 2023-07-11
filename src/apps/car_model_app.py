@@ -46,12 +46,12 @@ def update_prompt(id: int):
 def prompt_car_model() -> CarModelSerializer:
     date_format = "%d-%m-%Y"
     serializer = CarModelSerializer()
-    serializer.name = Prompt.ask("name")
-    serializer.release_date = datetime.datetime.strptime(Prompt.ask("release date, format dd-MM-yyyy"),
+    manufacturer_list = car_manufacturer_service.find_all()
+    manufacturer_name = Prompt.ask("Manufacturer", choices=[m.name for m in manufacturer_list])
+    serializer.manufacturer_id = list(filter(lambda x: x.name == manufacturer_name, manufacturer_list))[0].id
+    serializer.name = Prompt.ask("Car model name")
+    serializer.release_date = datetime.datetime.strptime(Prompt.ask("Release date, format dd-MM-yyyy"),
                                                          date_format).date()
 
-    manufacturer_list = car_manufacturer_service.find_all()
-    manufacturer_name = Prompt.ask("manufacturer", choices=[m.name for m in manufacturer_list])
-    serializer.manufacturer_id = list(filter(lambda x: x.name == manufacturer_name, manufacturer_list))[0].id
     serializer.base_price = int(Prompt.ask("Base price, rubles"))
     return serializer
