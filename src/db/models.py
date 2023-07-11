@@ -17,7 +17,7 @@ class CarManufacturer(Base):
     __tablename__ = "car_manufacturer"
 
     id = Column(Integer, primary_key=True)
-    name = string_column("name", max_length=255, min_length=1, nullable=False)
+    name = string_column("name", max_length=255, min_length=1, nullable=False, unique=True)
 
     def __init__(self, id: int, name: str):
         self.id = id
