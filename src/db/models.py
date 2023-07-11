@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, CheckConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, CheckConstraint, UniqueConstraint
 from sqlalchemy.orm import declarative_base, relationship, validates
 
 Base = declarative_base()
@@ -31,17 +31,23 @@ class CarModel(Base):
     __tablename__ = "car_model"
 
     id = Column(Integer, primary_key=True)
-    name = string_column("name", max_length=255, min_length=1, nullable=False, unique=True)
+    name = string_column("name", max_length=255, min_length=1, nullable=False)
     release_date = Column(Date, nullable=True)
     manufacturer_id = Column(ForeignKey("car_manufacturer.id", ondelete="CASCADE"), nullable=False)
+    base_price = Column(Integer, CheckConstraint("base_price >= 0"), nullable=True)
 
     manufacturer = relationship("CarManufacturer")
 
-    def __init__(self, id: int, name: str, release_date: date, manufacturer_id: int):
+    __table_args__ = (
+        UniqueConstraint("name", "manufacturer_id", name="model_name_manufacturer_unique"),
+    )
+
+    def __init__(self, id: int, name: str, release_date: date, manufacturer_id: int, base_price: int):
         self.id = id
         self.name = name
         self.release_date = release_date
         self.manufacturer_id = manufacturer_id
+        self.base_price = base_price
 
     def __repr__(self):
         return f"<CarModel(id={self.id}, name={self.name}, release_date={self.release_date} manufacturer_id={self.manufacturer_id})>"

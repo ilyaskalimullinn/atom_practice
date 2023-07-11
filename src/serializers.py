@@ -41,26 +41,30 @@ class CarModelSerializer(IModelSerializer[CarModel]):
     name: str
     release_date: date
     manufacturer_id: int
+    base_price: int
 
     def __init__(self,
                  id: Optional[int] = None,
                  name: Optional[str] = None,
                  release_date: Optional[date] = None,
-                 manufacturer_id: Optional[int] = None) -> None:
+                 manufacturer_id: Optional[int] = None,
+                 base_price: Optional[int] = None) -> None:
         self.id = id
         self.name = name
         self.release_date = release_date
         self.manufacturer_id = manufacturer_id
+        self.base_price = base_price
 
     def is_valid(self) -> bool:
         return self.name is not None \
             and len(self.name) > 0 \
             and (self.id is None or self.id > 0) \
             and self.manufacturer_id is not None \
-            and self.release_date is not None
+            and self.release_date is not None \
+            and (self.base_price is None or self.base_price >= 0)
 
     def to_obj(self) -> CarModel:
-        return CarModel(self.id, self.name, self.release_date, self.manufacturer_id)
+        return CarModel(**self.__dict__)
 
 
 class CarUsageSerializer(IModelSerializer[CarUsage]):

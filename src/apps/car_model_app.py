@@ -53,4 +53,5 @@ def prompt_car_model() -> CarModelSerializer:
     manufacturer_list = car_manufacturer_service.find_all()
     manufacturer_name = Prompt.ask("manufacturer", choices=[m.name for m in manufacturer_list])
     serializer.manufacturer_id = list(filter(lambda x: x.name == manufacturer_name, manufacturer_list))[0].id
+    serializer.base_price = int(Prompt.ask("Base price, rubles"))
     return serializer

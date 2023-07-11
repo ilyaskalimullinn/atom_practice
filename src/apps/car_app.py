@@ -84,8 +84,10 @@ def prompt_car() -> CarSerializer:
     serializer.mileage = int(Prompt.ask("Mileage, km"))
 
     all_usages = car_usage_service.find_all()
-    usage_name = Prompt.ask("Car usage", choices=[u.name for u in all_usages])
-    if usage_name != "":
+    usage_choices = [u.name for u in all_usages]
+    usage_choices.append("None")
+    usage_name = Prompt.ask("Car usage", choices=usage_choices)
+    if usage_name != "None":
         usage = list(filter(lambda u: u.name == usage_name, all_usages))[0]
         serializer.usage_id = usage.id
 

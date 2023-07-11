@@ -13,6 +13,6 @@ class CarModelView(GenericModelView):
             "manufacturer": lambda model: model.manufacturer.name
         }
         super().__init__(console,
-                         table_columns=["id", "name", "release_date", "manufacturer"],
-                         table_column_labels=["Id", "Name", "Release Date", "Manufacturer"],
+                         table_columns=["id", "name", "release_date", "manufacturer", "base_price"],
+                         table_column_labels=["Id", "Name", "Release Date", "Manufacturer", "Base price"],
                          special_columns=special_columns)
