@@ -31,7 +31,7 @@ class BaseCrudService(Generic[T], abc.ABC):
         return obj
 
     def delete_by_id(self, id: int) -> T:
-        obj = self.model_repository.find_by_id(id)
+        obj = self.model_repository.find_for_deletion_by_id(id)
         if obj is None:
             raise ServiceException(f"No {self.model_class} with id {id}")
         return self.delete(obj)

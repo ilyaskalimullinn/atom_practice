@@ -18,6 +18,9 @@ class IModelCrudRepository(Generic[T], abc.ABC):
     def find_by_id(self, id: int) -> Optional[T]:
         pass
 
+    def find_for_deletion_by_id(self, id: int) -> Optional[T]:
+        return self.find_by_id(id)
+
     @abc.abstractmethod
     def save(self, obj: T) -> None:
         pass
@@ -90,8 +93,11 @@ class CarModelRepository(ModelCrudMixin[CarModel], ICarModelRepository):
     def find_all(self) -> List[CarModel]:
         return self.session.query(CarModel).options(joinedload(CarModel.manufacturer)).all()
 
-    def find_by_id(self, id: int) -> Optional[CarModel]:
-        return self.session.get(CarModel, id)
+    def find_for_deletion_by_id(self, id: int) -> Optional[CarModel]:
+        return self.session.query(CarModel)\
+            .where(CarModel.id == id)\
+            .options(joinedload(CarModel.manufacturer))\
+            .first()
 
     def find_by_name(self, model_name: str, manufacturer_name: str) -> Optional[CarModel]:
         return self.session.query(CarModel)\
@@ -111,3 +117,12 @@ class CarUsageRepository(ModelCrudMixin[CarUsage], ICarUsageRepository):
 class CarRepository(ModelCrudMixin[Car], ICarRepository):
     def __init__(self, session: Session) -> None:
         super().__init__(session, Car)
+
+    def find_for_deletion_by_id(self, id: int) -> Optional[T]:
+        return self.session.query(Car) \
+            .where(Car.id == id) \
+            .options(joinedload(Car.usage)) \
+            .options(joinedload(Car.model).joinedload(CarModel.manufacturer)) \
+            .first()
+
+
