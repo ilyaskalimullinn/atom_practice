@@ -1,19 +1,25 @@
 from datetime import date
-from typing import Union, Optional
+from typing import Optional
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
-from sqlalchemy.orm import declarative_base, relationship, mapped_column
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, CheckConstraint
+from sqlalchemy.orm import declarative_base, relationship, validates
 
 Base = declarative_base()
+
+
+def string_column(name: str, max_length: int, min_length: int, **kwargs) -> Column:
+    constraint_str = f"LENGTH({name}) >= {min_length}"
+    column = Column(name, String(max_length), CheckConstraint(constraint_str), **kwargs)
+    return column
 
 
 class CarManufacturer(Base):
     __tablename__ = "car_manufacturer"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(255))
+    name = string_column("name", max_length=255, min_length=1, nullable=False)
 
-    def __init__(self, id, name):
+    def __init__(self, id: int, name: str):
         self.id = id
         self.name = name
 
@@ -25,9 +31,9 @@ class CarModel(Base):
     __tablename__ = "car_model"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(255))
-    release_date = Column(Date)
-    manufacturer_id = Column(ForeignKey("car_manufacturer.id", ondelete="CASCADE"))
+    name = string_column("name", max_length=255, min_length=1, nullable=False, unique=True)
+    release_date = Column(Date, nullable=True)
+    manufacturer_id = Column(ForeignKey("car_manufacturer.id", ondelete="CASCADE"), nullable=False)
 
     manufacturer = relationship("CarManufacturer")
 
@@ -45,9 +51,9 @@ class CarUsage(Base):
     __tablename__ = "car_usage"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(255))
+    name = string_column("name", max_length=255, min_length=1, nullable=False, unique=True)
 
-    def __init__(self, id, name):
+    def __init__(self, id: int, name: str):
         self.id = id
         self.name = name
 
@@ -59,11 +65,11 @@ class Car(Base):
     __tablename__ = "car"
 
     id = Column(Integer, primary_key=True)
-    plate_number = Column(String(32))
+    plate_number = string_column("plate_number", max_length=32, min_length=1, nullable=False, unique=True)
     manufacture_date = Column(Date)
-    mileage = Column(Integer)
-    model_id = Column(ForeignKey("car_model.id", ondelete="CASCADE"))
-    usage_id = Column(ForeignKey("car_usage.id", ondelete="SET NULL"))
+    mileage = Column(Integer, nullable=False, default=0)
+    model_id = Column(ForeignKey("car_model.id", ondelete="CASCADE"), nullable=False)
+    usage_id = Column(ForeignKey("car_usage.id", ondelete="SET NULL"), nullable=True)
 
     model = relationship("CarModel")
     usage = relationship("CarUsage")
