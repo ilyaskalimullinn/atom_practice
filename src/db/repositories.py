@@ -1,10 +1,12 @@
 import abc
 from typing import List, Optional, TypeVar, Generic, Type
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
 
 from db.db import Session
 from db.models import CarManufacturer, CarModel, CarUsage, Car
+from exceptions import DbUniqueException
 
 T = TypeVar("T")
 
@@ -66,11 +68,14 @@ class ModelCrudMixin(Generic[T]):
         return self.session.query(self.klass).all()
 
     def save(self, obj: T) -> None:
-        if obj.id is None:
-            self.session.add(obj)
-        else:
-            self.session.merge(obj)
-        self.session.commit()
+        try:
+            if obj.id is None:
+                self.session.add(obj)
+            else:
+                self.session.merge(obj)
+            self.session.commit()
+        except IntegrityError as e:
+            raise DbUniqueException(f"Unique constraint violation, {e.params}")
 
     def find_by_id(self, id: int) -> Optional[T]:
         return self.session.get(self.klass, id)

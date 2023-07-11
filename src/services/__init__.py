@@ -2,7 +2,7 @@ import abc
 from typing import TypeVar, Generic, Type, List, Optional
 
 from db.repositories import IModelCrudRepository
-from exceptions import ServiceException
+from exceptions import ServiceException, DbUniqueException
 from serializers import IModelSerializer
 
 T = TypeVar("T")
@@ -29,9 +29,12 @@ class BaseCrudService(Generic[T], abc.ABC):
             raise ServiceException("Validation exception")
         if serializer.id is not None:
             raise ServiceException("Invalid id: must be empty")
-        obj = serializer.to_obj()
-        self.model_repository.save(obj)
-        return obj
+        try:
+            obj = serializer.to_obj()
+            self.model_repository.save(obj)
+            return obj
+        except DbUniqueException as e:
+            raise ServiceException(str(e))
 
     def delete_by_id(self, id: int) -> T:
         obj = self.model_repository.find_for_deletion_by_id(id)
@@ -48,6 +51,9 @@ class BaseCrudService(Generic[T], abc.ABC):
             raise ServiceException("Validation exception")
         if serializer.id is None:
             raise ServiceException(f"Invalid {self.model_class} id")
-        obj = serializer.to_obj()
-        self.model_repository.save(obj)
-        return self.model_repository.find_by_id(obj.id)
+        try:
+            obj = serializer.to_obj()
+            self.model_repository.save(obj)
+            return self.model_repository.find_by_id(obj.id)
+        except DbUniqueException as e:
+            raise ServiceException(str(e))
