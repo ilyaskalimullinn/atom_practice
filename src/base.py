@@ -4,6 +4,7 @@ from db.db import Session
 from db.repositories import CarManufacturerRepository, CarModelRepository, CarUsageRepository, CarRepository
 from services.car_manufacturer_service import CarManufacturerService
 from services.car_model_service import CarModelService
+from services.car_price_service import CarPriceService
 from services.car_service import CarService
 from services.car_usage_service import CarUsageService
 from views.car_manufacturer_view import CarManufacturerView
@@ -32,3 +33,5 @@ car_usage_view = CarUsageView(console)
 car_repository = CarRepository(session)
 car_service = CarService(car_repository)
 car_view = CarView(console)
+
+car_price_service = CarPriceService()

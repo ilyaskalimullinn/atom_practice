@@ -3,7 +3,7 @@ from datetime import datetime
 import typer
 from rich.prompt import Prompt, Confirm
 
-from base import car_service, car_view, car_model_service, car_usage_service
+from base import car_service, car_view, car_model_service, car_usage_service, car_price_service
 from serializers import CarSerializer
 
 car_app = typer.Typer()
@@ -41,6 +41,18 @@ def delete(id: int):
     if is_confirmed:
         model = car_service.delete_by_id(id)
         car_view.deleted(model)
+
+
+@car_app.command("price")
+def calc_price(id: int):
+    """Calculate estimated car price"""
+    car = car_service.find_by_id(id)
+    if car is None:
+        car_view.print_message(f"No car with id {id}")
+        return
+    price = car_price_service.calc_car_price(car)
+    car_view.print_message(f"Car id{id}, model {car.model.manufacturer.name} {car.model.name}")
+    car_view.print_message(f"Estimated price is {price}")
 
 
 def prompt_car() -> CarSerializer:

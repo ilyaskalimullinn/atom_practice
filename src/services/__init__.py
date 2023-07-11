@@ -1,5 +1,5 @@
 import abc
-from typing import TypeVar, Generic, Type, List
+from typing import TypeVar, Generic, Type, List, Optional
 
 from db.repositories import IModelCrudRepository
 from exceptions import ServiceException
@@ -20,6 +20,9 @@ class BaseCrudService(Generic[T], abc.ABC):
 
     def find_all(self) -> List[T]:
         return self.model_repository.find_all()
+
+    def find_by_id(self, id) -> Optional[T]:
+        return self.model_repository.find_by_id(id)
 
     def create(self, serializer: IModelSerializer[T]) -> T:
         if not serializer.is_valid():
