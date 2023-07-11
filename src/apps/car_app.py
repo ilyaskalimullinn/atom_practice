@@ -4,6 +4,7 @@ import typer
 from rich.prompt import Prompt, Confirm
 
 from base import car_service, car_view, car_model_service, car_usage_service, car_price_service
+from exceptions import ServiceException
 from serializers import CarSerializer
 
 car_app = typer.Typer(help="Work with car instances: find them by plate number, show a list, create new instances etc.")
@@ -76,6 +77,8 @@ def prompt_car() -> CarSerializer:
         manufacturer_name = Prompt.ask("Car model manufacturer")
         model_name = Prompt.ask("Car model name")
         model = car_model_service.find_by_name(model_name=model_name, manufacturer_name=manufacturer_name)
+        if model is None:
+            raise ServiceException(f"No car model {manufacturer_name} {model_name}")
         serializer.model_id = model.id
 
     serializer.plate_number = Prompt.ask("Plate number")
