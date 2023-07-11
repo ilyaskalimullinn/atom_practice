@@ -62,7 +62,7 @@ def calc_price(id: int):
         return
     price = car_price_service.calc_car_price(car)
     car_view.print_message(f"Car id{id}, model {car.model.manufacturer.name} {car.model.name}")
-    car_view.print_message(f"Estimated price is {price}")
+    car_view.print_message(f"Estimated price is {price} rubles")
 
 
 def prompt_car() -> CarSerializer:
