@@ -2,6 +2,7 @@ from rich.console import Console
 
 from db.db import Session
 from db.repositories import CarManufacturerRepository, CarModelRepository, CarUsageRepository, CarRepository
+from services.can_data_j1939_reader_service import CanDataJ1939ReaderService
 from services.car_manufacturer_service import CarManufacturerService
 from services.car_model_service import CarModelService
 from services.car_price_service import CarPriceService
@@ -35,3 +36,5 @@ car_service = CarService(car_repository)
 car_view = CarView(console)
 
 car_price_service = CarPriceService()
+
+can_data_reader_service = CanDataJ1939ReaderService()
