@@ -49,7 +49,9 @@ class ICarUsageRepository(IModelCrudRepository[CarUsage], abc.ABC):
 
 
 class ICarRepository(IModelCrudRepository[Car], abc.ABC):
-    pass
+    @abc.abstractmethod
+    def find_by_plate_number(self, plate_number: str) -> Optional[Car]:
+        pass
 
 
 class ModelCrudMixin(Generic[T]):
@@ -124,5 +126,13 @@ class CarRepository(ModelCrudMixin[Car], ICarRepository):
             .options(joinedload(Car.usage)) \
             .options(joinedload(Car.model).joinedload(CarModel.manufacturer)) \
             .first()
+
+    def find_by_plate_number(self, plate_number: str) -> Optional[Car]:
+        return self.session.query(Car) \
+            .where(Car.plate_number == plate_number) \
+            .options(joinedload(Car.usage)) \
+            .options(joinedload(Car.model).joinedload(CarModel.manufacturer)) \
+            .first()
+
 
 

@@ -16,6 +16,16 @@ def find_all():
     car_view.print_table(*lst)
 
 
+@car_app.command("find")
+def find_by_plate(plate_number: str):
+    """Get a car info by plate_number"""
+    car = car_service.find_by_plate_number(plate_number)
+    if car is None:
+        car_view.print_message("Not found")
+    else:
+        car_view.print_table(car)
+
+
 @car_app.command("create")
 def create_prompt():
     """Create car using prompt"""
