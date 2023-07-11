@@ -2,7 +2,7 @@ import typer
 
 from base import can_data_reader_service
 
-car_dbc_app = typer.Typer()
+car_dbc_app = typer.Typer(help="Simple service that provides a way to read raw CAN data")
 
 
 @car_dbc_app.command("read")

@@ -6,7 +6,7 @@ from rich.prompt import Prompt, Confirm
 from base import car_model_service, car_model_view, car_manufacturer_service
 from serializers import CarModelSerializer
 
-car_model_app = typer.Typer()
+car_model_app = typer.Typer(help="Service to access and manipulate info about car models")
 
 
 @car_model_app.command("ls")

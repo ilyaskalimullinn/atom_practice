@@ -4,7 +4,7 @@ from rich.prompt import Prompt, Confirm
 from base import car_usage_service, car_usage_view
 from serializers import CarUsageSerializer
 
-car_usage_app = typer.Typer()
+car_usage_app = typer.Typer(help="Service to access and manipulate info about car usages: Taxi, Carsharing etc.")
 
 
 @car_usage_app.command("ls")
