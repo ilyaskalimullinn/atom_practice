@@ -1,42 +1,9 @@
-from typing import List, Optional
-
 from db.models import CarModel
 from db.repositories import ICarModelRepository
-from exceptions import ServiceException
-from serializers import CarModelSerializer
+from services import BaseCrudService, T
 
 
-class CarModelService:
-    car_model_repository: ICarModelRepository
+class CarModelService(BaseCrudService[CarModel]):
 
-    def __init__(self, car_model_repository: ICarModelRepository) -> None:
-        self.car_model_repository = car_model_repository
-
-    def find_all(self) -> List[CarModel]:
-        return self.car_model_repository.find_all()
-
-    def find_by_name(self, model_name: str, manufacturer_name: str) -> Optional[CarModel]:
-        return self.car_model_repository.find_by_name(model_name=model_name, manufacturer_name=manufacturer_name)
-
-    def create(self, serializer: CarModelSerializer) -> CarModel:
-        if not serializer.is_valid():
-            raise ServiceException("Arguments validation error")
-        car_model = serializer.to_obj()
-        self.car_model_repository.save(car_model)
-        return car_model
-
-    def delete(self, id: int) -> CarModel:
-        car_model = self.car_model_repository.find_by_id(id)
-        if car_model is None:
-            raise ServiceException(f"No car model with id {id}")
-        self.car_model_repository.delete(car_model)
-        return car_model
-
-    def update(self, serializer: CarModelSerializer) -> CarModel:
-        if not serializer.is_valid():
-            raise ServiceException("Validation exception")
-        if serializer.id is None:
-            raise ServiceException("Invalid car model id")
-        model = serializer.to_obj()
-        self.car_model_repository.save(model)
-        return self.car_model_repository.find_by_id(model.id)
+    def __init__(self, model_repository: ICarModelRepository) -> None:
+        super().__init__(model_repository, CarModel)

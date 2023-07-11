@@ -1,5 +1,4 @@
 import datetime
-from datetime import date
 
 import typer
 from rich.prompt import Prompt, Confirm
@@ -31,7 +30,7 @@ def delete(id: int):
     """Delete car model by id"""
     is_confirmed = Confirm.ask(f"Are you sure you want to delete car model with id {id}?")
     if is_confirmed:
-        model = car_model_service.delete(id)
+        model = car_model_service.delete_by_id(id)
         car_model_view.deleted(model)
 
 
